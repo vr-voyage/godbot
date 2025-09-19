@@ -1,0 +1,89 @@
+[gd_scene load_steps=14 format=3 uid="uid://crmpf7ig8wo3y"]
+
+[ext_resource type="Script" uid="uid://b75ahw8on0gqj" path="res://discord_connection.gd" id="1_govvg"]
+[ext_resource type="Script" uid="uid://j57mymm8qden" path="res://test_bot_scene.gd" id="1_vjwj5"]
+[ext_resource type="Resource" uid="uid://j004w2jwg5fd" path="res://discord/resources/bot_configuration.tres" id="3_ufs3i"]
+[ext_resource type="Script" uid="uid://d3oycsg4flyrf" path="res://discord/nodes/gateway_handlers.gd" id="4_djsm0"]
+[ext_resource type="Script" uid="uid://bel1pv3pbv17e" path="res://discord/nodes/gateway_handlers/gateway_dispatch_handlers.gd" id="5_djsm0"]
+[ext_resource type="Script" uid="uid://iiu8jt7n0m5d" path="res://discord/nodes/gateway_handlers/dispatch_handlers/interactions/interaction_handlers.gd" id="6_snh4b"]
+[ext_resource type="Script" uid="uid://cbxqq7buwfc1y" path="res://discord/nodes/gateway_handlers/dispatch_handlers/interactions/interaction_application_command.gd" id="7_8gakc"]
+[ext_resource type="Script" uid="uid://kxiv0q8uodi2" path="res://discord/nodes/gateway_handlers/dispatch_handlers/interactions/application_commands/commands/prompt_command.gd" id="8_f0608"]
+[ext_resource type="Script" uid="uid://4x7utge5oerj" path="res://discord/nodes/gateway_handlers/dispatch_handlers/interactions/interaction_modal_submit.gd" id="9_0wkto"]
+[ext_resource type="Script" uid="uid://pgf7qrxe3kks" path="res://discord/nodes/gateway_handlers/dispatch_handlers/interactions/modal_submit/modals_handlers/prompt_modal.gd" id="10_asl8e"]
+[ext_resource type="Script" uid="uid://q1qgevmepu06" path="res://discord/nodes/gateway_handlers/gateway_heartbeat_handler.gd" id="11_0wkto"]
+[ext_resource type="Script" uid="uid://bvtyxkskyojbw" path="res://discord/nodes/gateway_handlers/gateway_hello_handler.gd" id="12_26o8a"]
+[ext_resource type="Script" uid="uid://bpasfbcpi71ns" path="res://discord/nodes/gateway_handlers/gateway_hearbeat_ack_handler.gd" id="13_wia81"]
+
+[node name="Node" type="PanelContainer" node_paths=PackedStringArray("log_display", "objects_display")]
+process_mode = 4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vjwj5")
+log_display = NodePath("HSplitContainer/ScrollContainer2/TextEdit")
+objects_display = NodePath("HSplitContainer/ScrollContainer/VBoxContainer2")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextEdit" type="Label" parent="HSplitContainer/ScrollContainer2"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+autowrap_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HSplitContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DiscordBot" type="Node" parent="." node_paths=PackedStringArray("gateway_handlers")]
+process_mode = 3
+script = ExtResource("1_govvg")
+configuration = ExtResource("3_ufs3i")
+gateway_handlers = NodePath("GatewayHandlers")
+
+[node name="GatewayHandlers" type="Node" parent="DiscordBot"]
+process_mode = 4
+script = ExtResource("4_djsm0")
+
+[node name="Dispatch" type="Node" parent="DiscordBot/GatewayHandlers"]
+script = ExtResource("5_djsm0")
+
+[node name="InteractionCreateHandlers" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch"]
+script = ExtResource("6_snh4b")
+
+[node name="ApplicationCommands" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers"]
+script = ExtResource("7_8gakc")
+
+[node name="Prompt" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers/ApplicationCommands"]
+script = ExtResource("8_f0608")
+
+[node name="ModalSubmit" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers"]
+script = ExtResource("9_0wkto")
+
+[node name="PromptModal" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers/ModalSubmit"]
+script = ExtResource("10_asl8e")
+
+[node name="Heartbeat" type="Node" parent="DiscordBot/GatewayHandlers"]
+script = ExtResource("11_0wkto")
+
+[node name="Hello" type="Node" parent="DiscordBot/GatewayHandlers"]
+script = ExtResource("12_26o8a")
+
+[node name="HeartbeatAck" type="Node" parent="DiscordBot/GatewayHandlers"]
+script = ExtResource("13_wia81")
+
+[connection signal="on_object_received" from="DiscordBot" to="." method="_on_node_on_object_received"]
+[connection signal="on_send_object" from="DiscordBot" to="." method="_on_node_on_send_object"]

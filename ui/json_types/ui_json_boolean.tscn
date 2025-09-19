@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://bg8t26w2srj8d"]
+
+[ext_resource type="Script" uid="uid://c5gef78m4yrjk" path="res://ui/json_types/ui_json_boolean.gd" id="1_bu3xu"]
+
+[node name="UiJsonBoolean" type="VBoxContainer"]
+offset_right = 14.0
+offset_bottom = 23.0
+script = ExtResource("1_bu3xu")
+
+[node name="True" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.439216, 0.807843, 1, 1)
+text = "True"
+
+[node name="False" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.999955, 0.515024, 0.448901, 1)
+text = "False"

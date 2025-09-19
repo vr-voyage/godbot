@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cedo5m2iairaq"]
+
+[ext_resource type="Script" uid="uid://bfbo5h6vqgydq" path="res://ui/json_types/ui_json_null.gd" id="1_cyd52"]
+
+[node name="UiJsonNull" type="Label"]
+offset_right = 1.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.98, 0.3038, 0.40523, 1)
+text = "Null"
+script = ExtResource("1_cyd52")

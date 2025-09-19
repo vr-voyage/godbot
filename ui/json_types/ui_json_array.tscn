@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://mbpirm3bi6yk"]
+
+[ext_resource type="Script" uid="uid://ix3omt6522lo" path="res://ui/json_types/ui_json_array.gd" id="1_scufx"]
+[ext_resource type="PackedScene" uid="uid://cj518c7l2l11h" path="res://ui/json_types/ui_json_array_value.tscn" id="2_noixg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_scufx"]
+bg_color = Color(0.0199256, 0.0199256, 0.0199256, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.15514e-06, 0.736535, 0.989645, 1)
+
+[node name="UiJsonArray" type="PanelContainer" node_paths=PackedStringArray("values_container")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_scufx")
+script = ExtResource("1_scufx")
+array_value_display = ExtResource("2_noixg")
+values_container = NodePath("ArrayContent")
+
+[node name="ArrayContent" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0

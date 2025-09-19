@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://cj518c7l2l11h"]
+
+[ext_resource type="Script" uid="uid://b8i6ymn743l6g" path="res://ui/json_types/ui_json_array_value.gd" id="1_h6j8v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h6j8v"]
+bg_color = Color(0.00131516, 0.00131516, 0.00131516, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="VBoxContainer" type="PanelContainer" node_paths=PackedStringArray("ui_index", "container")]
+offset_right = 3.0
+offset_bottom = 25.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_h6j8v")
+script = ExtResource("1_h6j8v")
+ui_index = NodePath("VBoxContainer/Label")
+container = NodePath("VBoxContainer")
+
+[node name="VBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
