@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2bchws1nm2f7"]
+
+[ext_resource type="Script" uid="uid://cccy7wlkxjt8y" path="res://factory/workers/tests/ollama_worker_tests.gd" id="1_7b6qa"]
+[ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="2_8w7li"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="3_5jb8m"]
+
+[node name="OllamaWorkerTests" type="Control" node_paths=PackedStringArray("ollama_worker")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7b6qa")
+ollama_worker = NodePath("OllamaWorker")
+
+[node name="OllamaWorker" type="Node" parent="." node_paths=PackedStringArray("ollama_connection")]
+script = ExtResource("2_8w7li")
+ollama_connection = NodePath("OllamaConnection")
+metadata/_custom_type_script = "uid://c1cnremojxonq"
+
+[node name="OllamaConnection" type="Node" parent="OllamaWorker"]
+script = ExtResource("3_5jb8m")
+metadata/_custom_type_script = "uid://dppfooqqohjee"

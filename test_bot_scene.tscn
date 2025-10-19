@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://crmpf7ig8wo3y"]
+[gd_scene load_steps=18 format=3 uid="uid://crmpf7ig8wo3y"]
 
 [ext_resource type="Script" uid="uid://b75ahw8on0gqj" path="res://discord_connection.gd" id="1_govvg"]
 [ext_resource type="Script" uid="uid://j57mymm8qden" path="res://test_bot_scene.gd" id="1_vjwj5"]
@@ -13,20 +13,25 @@
 [ext_resource type="Script" uid="uid://q1qgevmepu06" path="res://discord/nodes/gateway_handlers/gateway_heartbeat_handler.gd" id="11_0wkto"]
 [ext_resource type="Script" uid="uid://bvtyxkskyojbw" path="res://discord/nodes/gateway_handlers/gateway_hello_handler.gd" id="12_26o8a"]
 [ext_resource type="Script" uid="uid://bpasfbcpi71ns" path="res://discord/nodes/gateway_handlers/gateway_hearbeat_ack_handler.gd" id="13_wia81"]
+[ext_resource type="Script" uid="uid://cikf33jp468rv" path="res://factory/consumers/discord_customer_agent.gd" id="14_wy6fe"]
+[ext_resource type="Script" uid="uid://yn45gdivmxoj" path="res://factory/ai_jobs_factory.gd" id="15_7u6y5"]
+[ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="16_15hng"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="17_julb8"]
 
 [node name="Node" type="PanelContainer" node_paths=PackedStringArray("log_display", "objects_display")]
-process_mode = 4
+process_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_vjwj5")
 log_display = NodePath("HSplitContainer/ScrollContainer2/TextEdit")
 objects_display = NodePath("HSplitContainer/ScrollContainer/VBoxContainer2")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
-visible = false
+process_mode = 3
 layout_mode = 2
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="HSplitContainer"]
@@ -41,12 +46,15 @@ size_flags_vertical = 3
 autowrap_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer"]
+process_mode = 3
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 2
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="HSplitContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="DiscordBot" type="Node" parent="." node_paths=PackedStringArray("gateway_handlers")]
 process_mode = 3
@@ -73,8 +81,9 @@ script = ExtResource("8_f0608")
 [node name="ModalSubmit" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers"]
 script = ExtResource("9_0wkto")
 
-[node name="PromptModal" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers/ModalSubmit"]
+[node name="PromptModal" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers/ModalSubmit" node_paths=PackedStringArray("discord_customer_agent")]
 script = ExtResource("10_asl8e")
+discord_customer_agent = NodePath("../../../../../../DiscordCustomerAgent")
 
 [node name="Heartbeat" type="Node" parent="DiscordBot/GatewayHandlers"]
 script = ExtResource("11_0wkto")
@@ -84,6 +93,29 @@ script = ExtResource("12_26o8a")
 
 [node name="HeartbeatAck" type="Node" parent="DiscordBot/GatewayHandlers"]
 script = ExtResource("13_wia81")
+
+[node name="DiscordCustomerAgent" type="Node" parent="." node_paths=PackedStringArray("discord_bot", "factory")]
+process_mode = 3
+script = ExtResource("14_wy6fe")
+discord_bot = NodePath("../DiscordBot")
+factory = NodePath("../AiJobFactory")
+metadata/_custom_type_script = "uid://cikf33jp468rv"
+
+[node name="AiJobFactory" type="Node" parent="." groups=["Factories"]]
+process_mode = 3
+script = ExtResource("15_7u6y5")
+metadata/_custom_type_script = "uid://yn45gdivmxoj"
+
+[node name="OllamaWorker" type="Node" parent="." node_paths=PackedStringArray("ollama_connection")]
+process_mode = 3
+script = ExtResource("16_15hng")
+ollama_connection = NodePath("../OllamaConnection")
+metadata/_custom_type_script = "uid://c1cnremojxonq"
+
+[node name="OllamaConnection" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("17_julb8")
+metadata/_custom_type_script = "uid://dppfooqqohjee"
 
 [connection signal="on_object_received" from="DiscordBot" to="." method="_on_node_on_object_received"]
 [connection signal="on_send_object" from="DiscordBot" to="." method="_on_node_on_send_object"]

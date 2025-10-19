@@ -1,0 +1,54 @@
+[gd_scene load_steps=7 format=3 uid="uid://v8xxqg053i64"]
+
+[ext_resource type="Script" uid="uid://cvc2ybkhc34mx" path="res://factory/consumers/tests/discord_customer_agent_tests.gd" id="1_3n4uh"]
+[ext_resource type="Script" uid="uid://cj5sk82j2su53" path="res://factory/consumers/tests/fake_discord_bot.gd" id="2_vmsqy"]
+[ext_resource type="Script" uid="uid://cikf33jp468rv" path="res://factory/consumers/discord_customer_agent.gd" id="3_5q34v"]
+[ext_resource type="Script" uid="uid://yn45gdivmxoj" path="res://factory/ai_jobs_factory.gd" id="4_f4alo"]
+[ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="5_dunfi"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="6_6inj2"]
+
+[node name="DiscordCustomerAgentTests" type="Control" node_paths=PackedStringArray("discord_customer_agent", "debug_output")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3n4uh")
+discord_customer_agent = NodePath("DiscordCustomerAgent")
+debug_output = NodePath("ScrollContainer/TextEdit")
+
+[node name="FakeDiscordBot" type="Node" parent="."]
+script = ExtResource("2_vmsqy")
+
+[node name="DiscordCustomerAgent" type="Node" parent="." node_paths=PackedStringArray("discord_bot", "factory")]
+script = ExtResource("3_5q34v")
+discord_bot = NodePath("../FakeDiscordBot")
+factory = NodePath("../AiJobFactory")
+metadata/_custom_type_script = "uid://cikf33jp468rv"
+
+[node name="AiJobFactory" type="Node" parent="." groups=["Factories"]]
+script = ExtResource("4_f4alo")
+metadata/_custom_type_script = "uid://yn45gdivmxoj"
+
+[node name="OllamaWorker" type="Node" parent="." node_paths=PackedStringArray("ollama_connection")]
+script = ExtResource("5_dunfi")
+ollama_connection = NodePath("../OllamaConnection")
+metadata/_custom_type_script = "uid://c1cnremojxonq"
+
+[node name="OllamaConnection" type="Node" parent="."]
+script = ExtResource("6_6inj2")
+metadata/_custom_type_script = "uid://dppfooqqohjee"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextEdit" type="TextEdit" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

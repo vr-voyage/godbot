@@ -20,25 +20,11 @@ func respond_to_command(_command_data:Dictionary, _interaction_data:Dictionary) 
 						"placeholder": "Choose...",
 						"options": [
 							{
-								"label": "Qwen3",
-								"value": "qwen3-coder",
-								"description": "(best option)",
+								"label": "Gemma3 (1B)",
+								"value": "gemma3:1b",
+								"description": "The idiot",
 								"emoji": {
 									"name": "🌤"
-								}
-							},
-							{
-								"label": "GPT OSS",
-								"value": "gpt-oss",
-								"emoji": {
-									"name": "💺"
-								}
-							},
-							{
-								"label": "Hamsterosaurus",
-								"value": "hamsterosaurus",
-								"emoji": {
-									"name": "🐹"
 								}
 							}
 						]
@@ -54,7 +40,7 @@ func respond_to_command(_command_data:Dictionary, _interaction_data:Dictionary) 
 						"style": 2,
 						"min_length": 1,
 						"max_length": 4000,
-						"placeholder": "How to do kung-fu with Unity in C#?",
+						"placeholder": "How to add a Hamster with kung-fu skills in Unity, using C#?",
 						"required": true
 					}
 				}

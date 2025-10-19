@@ -19,10 +19,10 @@ static func display(value, container):
 		printerr("Cannot display value of type %s (%d)" % [value_type_name, value_type])
 		return
 
-	var display := displayers[value_type].instantiate()
-	if display == null:
+	var display_block := displayers[value_type].instantiate()
+	if display_block == null:
 		printerr("Could not instantiate display of type %s (%d)" % [value_type_name, value_type])
 		return
 
-	container.add_child(display)
-	display.display(value)
+	container.add_child(display_block)
+	display_block.display(value)

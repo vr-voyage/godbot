@@ -1,4 +1,4 @@
-extends Node
+extends Control
 
 @export var log_display:Label
 @export var objects_display:Container

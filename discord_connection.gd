@@ -18,6 +18,25 @@ var last_sequence = null
 var heartbeat_timer:Timer = Timer.new()
 var default_timer_value:float = 42.5
 
+func send_request(
+	method:HTTPClient.Method,
+	endpoint:String,
+	data_sent:Dictionary,
+	callback:Callable):
+	var http_request:HTTPRequest = HTTPRequest.new()
+	add_child(http_request)
+	http_request.request_completed.connect(callback)
+	
+	var url := "https://discord.com" + endpoint
+	var data := JSON.stringify(data_sent)
+	var headers:PackedStringArray = [
+		"Content-Type: application/json",
+		"Authorization: Bot %s" % configuration.token]
+	print_debug("URL : %s, data : %s" % [url, data])
+	
+	http_request.request(url, headers, method, data)
+
+
 func restart_heartbeat_timer(time:float = -1):
 	if time < 0 or is_inf(time) or is_nan(time):
 		time = default_timer_value
@@ -37,31 +56,12 @@ func interaction_response(
 func respond_to_interaction(interaction_data:Dictionary, response_data:Dictionary, callback:Callable = interaction_response) -> void:
 	var interaction_id:String = interaction_data["id"] as String
 	var interaction_token:String = interaction_data["token"] as String
-	var http_request:HTTPRequest = HTTPRequest.new()
-	add_child(http_request)
-	http_request.request_completed.connect(callback)
-	
-	var url := "https://discord.com/api/v10/interactions/%s/%s/callback" % [interaction_id, interaction_token]
-	var data := JSON.stringify(response_data)
-	var headers:PackedStringArray = [
-		"Content-Type: application/json",
-		"Authorization: Bot %s" % configuration.token]
-	print_debug("URL : %s, data : %s" % [url, data])
-	
-	http_request.request(url, headers, HTTPClient.METHOD_POST, data)
 
-func response_interaction_prompt_modal(interaction_data: Dictionary, modal_data: Dictionary) -> void:
-	var modal_components:Array = modal_data["components"]
-	var model_name:String = modal_components[0]["component"]["values"][0] as String
-	var model_prompt:String = modal_components[1]["component"]["value"] as String
-	var response_message:Dictionary = {
-		"type": 4,
-		"data": {
-			"content": "You thought it was your stupidy Llama, but it was, I, GODOT ! So I don't care about your %s and your prompt:\n%s" % [model_name, model_prompt]
-		}
-	}
-	respond_to_interaction(interaction_data, response_message, interaction_response)
-	pass
+	send_request(
+		HTTPClient.METHOD_POST,
+		"/api/v10/interactions/%s/%s/callback" % [interaction_id, interaction_token],
+		response_data,
+		callback)
 
 func send_data(data):
 	if websocket.get_ready_state() != WebSocketPeer.STATE_OPEN:
@@ -86,6 +86,10 @@ func _ready():
 	connect_to_discord()
 	set_process(true)
 	print_debug("Bot started")
+	timer_send_message_again = Timer.new()
+	add_child(timer_send_message_again)
+	timer_send_message_again.timeout.connect(send_current_message)
+	timer_send_message_again.stop()
 
 func connect_to_discord():
 	if websocket.get_ready_state() != WebSocketPeer.STATE_CLOSED:
@@ -160,3 +164,138 @@ func _process(_delta):
 		var reason = websocket.get_close_reason()
 		print_debug("websocket", "WebSocket closed with code: %d (%s). Clean: %s" % [code, reason, code != -1])
 		set_process(false) # Stop processing.
+
+func _cb_http_client_thread_created(
+	result: int,
+	response_code: int,
+	_headers: PackedStringArray,
+	body: PackedByteArray,
+	callback:Callable):
+	if result != HTTPRequest.RESULT_SUCCESS:
+		callback.call(false, "The HTTP Request failed with error %d" % result)
+		return
+
+	var content:String = body.get_string_from_utf8() if !body.is_empty() else ""
+	if response_code > 400 or content.is_empty():
+		callback.call(false, "Got the following response code %d - Content : %s" % [response_code, content])
+		return
+
+	var json_content = JSON.parse_string(content)
+	if not json_content is Dictionary:
+		callback.call(false, "Could not parse the provided answer : %s" % content)
+		return
+
+	var json_dict:Dictionary = json_content as Dictionary
+
+	callback.call(true, json_dict)
+
+class QueuedMessage:
+	var channel_id:String
+	var content:String
+
+	func _init(channel:String, message:String):
+		channel_id = channel
+		content = message
+
+var messages_to_send:Array[QueuedMessage] = []
+var sending:bool = false
+var timer_send_message_again:Timer
+
+func send_current_message():
+	sending = true
+	print_debug("SEND CURRENT")
+	if messages_to_send.is_empty():
+		return
+
+	var next_message:QueuedMessage = messages_to_send.front()
+
+	# Just in case we got a weird message queued
+	while next_message == null && messages_to_send:
+		printerr("[BUG] A null message was queued !")
+		messages_to_send.pop_front()
+		next_message = messages_to_send.front()
+	if next_message == null && messages_to_send.is_empty():
+		sending = false
+		return
+
+	_send_message(next_message)
+
+func mark_current_message_sent_and_send_next_message():
+	print_debug("MARK CURRENT AS SENT")
+	messages_to_send.pop_front()
+	if messages_to_send.is_empty():
+		sending = false
+		return
+	send_current_message()
+
+
+func _handle_message_rate_limit(error_message:String):
+	if error_message == null:
+		print_debug("[BUG] The rate limit message was null ??")
+		mark_current_message_sent_and_send_next_message()
+
+	var json_error:Dictionary = JSON.parse_string(error_message) as Dictionary
+	if json_error == null:
+		print_debug("[BUG] The rate limit info could not be parsed (%s)" % error_message)
+		mark_current_message_sent_and_send_next_message()
+
+	if not json_error.has("retry_after"):
+		print_debug("[BUG] Expected a 'retry_after' field in the JSON data")
+		mark_current_message_sent_and_send_next_message()
+
+	timer_send_message_again.start(json_error.get("retry_after") as float)
+
+func _cb_http_client_message_created(
+	_result: int,
+	response_code: int,
+	_headers: PackedStringArray,
+	body: PackedByteArray):
+
+	if response_code == 429:
+		_handle_message_rate_limit(body.get_string_from_utf8())
+		return
+
+	var content:String = body.get_string_from_utf8()
+	print_debug("[Message created result] %s" % content)
+
+	if response_code > 400:
+		printerr("[Message creation] Message creation failed :C")
+
+	mark_current_message_sent_and_send_next_message()
+
+func _send_message(queued_message:QueuedMessage):
+	print_debug("SENDING MESSAGE : %s" % queued_message.content)
+	send_request(
+		HTTPClient.METHOD_POST,
+		"/api/v10/channels/%s/messages" % queued_message.channel_id,
+		{
+			"content": queued_message.content,
+		},
+		_cb_http_client_message_created)
+
+func send_message_in(channel_id:String, message:String):
+	print_debug("Sending message...")
+	send_messages_in(channel_id, [message])
+
+func send_messages_in(channel_id:String, messages:PackedStringArray):
+	print_debug("[DiscordBot] Sending %d messages to %s" % [len(messages), channel_id])
+	for message in messages:
+		messages_to_send.append(QueuedMessage.new(channel_id, message))
+
+	if not sending:
+		send_current_message()
+
+func create_thread_in(channel_id:String, thread_title:String, callback:Callable):
+	const PUBLIC_THREAD:int = 11
+	var thread_data:Dictionary = {
+		"name": thread_title,
+		"auto_archive_duration": 1440,
+		"type": PUBLIC_THREAD,
+	}
+	print_debug("Create thread : %s - %s" % [channel_id, thread_title])
+	send_request(
+		HTTPClient.METHOD_POST,
+		"/api/v10/channels/%s/threads" % [channel_id],
+		thread_data,
+		_cb_http_client_thread_created.bind(callback))
+	pass

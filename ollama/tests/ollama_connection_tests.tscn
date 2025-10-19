@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://6a3dd6xgi648"]
+
+[ext_resource type="Script" uid="uid://bq1ay5en2gsdm" path="res://ollama/tests/ollama_connection_tests.gd" id="1_162v3"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="2_7tw28"]
+
+[node name="OllamaConnectionTests" type="Control" node_paths=PackedStringArray("ollama_connection")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_162v3")
+ollama_connection = NodePath("OllamaConnection")
+
+[node name="OllamaConnection" type="Node" parent="."]
+script = ExtResource("2_7tw28")
+metadata/_custom_type_script = "uid://dppfooqqohjee"

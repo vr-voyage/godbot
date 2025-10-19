@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://b66jvwxnixg3v"]
+
+[ext_resource type="Script" uid="uid://skiopa3ipnmu" path="res://factory/tests/ai_jobs_factory_tests.gd" id="1_rxbp4"]
+[ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="2_dn8du"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="3_8sa56"]
+[ext_resource type="Script" uid="uid://yn45gdivmxoj" path="res://factory/ai_jobs_factory.gd" id="4_u2101"]
+
+[node name="AiJobsFactoryTests" type="Control" node_paths=PackedStringArray("factory")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rxbp4")
+factory = NodePath("AiJobFactory")
+
+[node name="OllamaWorker" type="Node" parent="." node_paths=PackedStringArray("ollama_connection")]
+script = ExtResource("2_dn8du")
+ollama_connection = NodePath("OllamaConnection")
+metadata/_custom_type_script = "uid://c1cnremojxonq"
+
+[node name="OllamaConnection" type="Node" parent="OllamaWorker"]
+script = ExtResource("3_8sa56")
+metadata/_custom_type_script = "uid://dppfooqqohjee"
+
+[node name="AiJobFactory" type="Node" parent="." groups=["Factories"]]
+script = ExtResource("4_u2101")
+metadata/_custom_type_script = "uid://yn45gdivmxoj"

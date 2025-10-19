@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dti7pg15h7clf"]
+
+[ext_resource type="Script" uid="uid://bcutpxa5ej0pf" path="res://godot_tests/print_whatever_class_name.gd" id="1_ysuxs"]
+[ext_resource type="Script" uid="uid://yn45gdivmxoj" path="res://factory/ai_jobs_factory.gd" id="2_hfnhg"]
+
+[node name="Control" type="Control" node_paths=PackedStringArray("test_node")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ysuxs")
+test_node = NodePath("Control")
+
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_hfnhg")

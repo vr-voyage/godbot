@@ -1,4 +1,4 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-#discord/resources/bot_configuration.tres
+discord/resources/bot_configuration.tres
