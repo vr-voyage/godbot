@@ -9,10 +9,14 @@ func _ollama_response(status, content):
 func _ready():
 	ollama_connection.chat_request_response.connect(_ollama_response)
 	ollama_connection.pull_model_response.connect(_ollama_response)
+	ollama_connection.list_models_response.connect(_ollama_response)
 
 #	var pull_request := OllamaModelPullRequest.new()
 #	pull_request.model = "gemma3:1b"
 #	ollama_connection.send_pull_model_request(pull_request)
+
+	var list_models_request := OllamaListModelsRequest.new()
+	ollama_connection.send_list_models_request(list_models_request)
 
 	var chat_request := OllamaChatCompletionRequest.new()
 	chat_request.model = "gemma3:1b"

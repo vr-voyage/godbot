@@ -1,4 +1,4 @@
-class_name OllamaChatCompletionRequest extends Resource
+class_name OllamaChatCompletionRequest extends OllamaRequest
 
 @export var model:String
 @export var messages:Array[Dictionary]
@@ -8,11 +8,14 @@ class_name OllamaChatCompletionRequest extends Resource
 @export var stream:bool
 @export var keep_alive:int = 5*60
 
-func add_prompt(prompt:String, role:String = "user"):
-	messages.append({"content": prompt, "role": role})
+func add_prompt(prompt:AiChatPrompt):
+	messages.append({"content": prompt.content, "role": prompt.role})
 
 func to_dictionary() -> Dictionary:
-	var dict:Dictionary = {"model": model, "messages": messages, "stream": stream}
+	var dict:Dictionary = {
+		"model": model,
+		"messages": messages,
+		"stream": stream}
 
 	var fields := [
 		[tools, "tools"],

@@ -1,6 +1,6 @@
 @abstract class_name DiscordBotInteractionHandler extends Node
 
-@abstract func get_interaction_type() -> DiscordBotGatewayInteractionHandlers.InteractionType
+@abstract func get_interaction_type() -> DiscordTypes.Interaction
 @abstract func handle_interaction(discord_bot:DiscordBot, interaction_data:Dictionary) -> void
 
 func _enter_tree():

@@ -2,8 +2,8 @@ class_name DiscordBotModalSubmitHandlers extends DiscordBotInteractionHandler
 
 var handlers:Dictionary[String,DiscordBotModalSubmitHandler] = {}
 
-func get_interaction_type() -> DiscordBotGatewayInteractionHandlers.InteractionType:
-	return DiscordBotGatewayInteractionHandlers.InteractionType.MODAL_SUBMIT
+func get_interaction_type() -> DiscordTypes.Interaction:
+	return DiscordTypes.Interaction.MODAL_SUBMIT
 
 func handle_interaction(discord_bot:DiscordBot, interaction_data:Dictionary) -> void:
 	if not interaction_data.has("data"):

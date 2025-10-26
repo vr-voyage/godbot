@@ -17,23 +17,48 @@ var last_sequence = null
 
 var heartbeat_timer:Timer = Timer.new()
 var default_timer_value:float = 42.5
+var n_acks:int = 0
+
+@export var http_requests_queue:HttpRequestsQueue
+
+const debug_http_method_names:Array[String] = [
+	"GET",
+	"HEAD",
+	"POST",
+	"PUT",
+	"DELETE",
+	"OPTIONS",
+	"TRACE",
+	"CONNECT",
+	"PATCH"
+]
+
+func print_to_curl(method:HTTPClient.Method, url:String, headers:PackedStringArray) -> void:
+	var curl_command:String = "curl "
+	if method >= 0 && method <= HTTPClient.METHOD_MAX:
+		curl_command += "-X %s " % debug_http_method_names[method]
+
+	for header in headers:
+		curl_command += "-H '%s' " % header
+
+	curl_command += url
+	print_debug(curl_command)
 
 func send_request(
 	method:HTTPClient.Method,
 	endpoint:String,
-	data_sent:Dictionary,
+	data_sent,
 	callback:Callable):
 	var http_request:HTTPRequest = HTTPRequest.new()
 	add_child(http_request)
 	http_request.request_completed.connect(callback)
 	
 	var url := "https://discord.com" + endpoint
-	var data := JSON.stringify(data_sent)
-	var headers:PackedStringArray = [
-		"Content-Type: application/json",
-		"Authorization: Bot %s" % configuration.token]
-	print_debug("URL : %s, data : %s" % [url, data])
-	
+	var data:String = JSON.stringify(data_sent) if data_sent != null else ""
+	var headers:PackedStringArray = ["Authorization: Bot %s" % configuration.token]
+	if method != HTTPClient.Method.METHOD_GET:
+		headers.append("Content-Type: application/json")
+	print_to_curl(method, url, headers)
 	http_request.request(url, headers, method, data)
 
 
@@ -43,6 +68,8 @@ func restart_heartbeat_timer(time:float = -1):
 	heartbeat_timer.start(time)
 
 func send_heartbeat():
+	if websocket.get_ready_state() == WebSocketPeer.STATE_CLOSED:
+		return
 	send_data({"op": 1, "d": last_sequence})
 	restart_heartbeat_timer()
 
@@ -91,13 +118,14 @@ func _ready():
 	timer_send_message_again.timeout.connect(send_current_message)
 	timer_send_message_again.stop()
 
+
 func connect_to_discord():
 	if websocket.get_ready_state() != WebSocketPeer.STATE_CLOSED:
 		websocket.close()
 
 	websocket.connect_to_url("wss://gateway.discord.gg/?v=10&encoding=json")
 
-var n_acks:int = 0
+
 
 func parse_packet_content(content:String):
 	on_data_received.emit(content)
@@ -124,7 +152,7 @@ func identify_ourselves():
 		"op": 2,
 		"d": {
 			"token": configuration.token,
-			"intents": 0b11111100010011,
+			"intents": 0b1111111100010011,
 			"properties": {
 				  "os": "windows",
 				  "browser": "godot",
@@ -293,9 +321,26 @@ func create_thread_in(channel_id:String, thread_title:String, callback:Callable)
 		"type": PUBLIC_THREAD,
 	}
 	print_debug("Create thread : %s - %s" % [channel_id, thread_title])
-	send_request(
+
+	http_requests_queue.plan_request(
+		callback,
 		HTTPClient.METHOD_POST,
 		"/api/v10/channels/%s/threads" % [channel_id],
-		thread_data,
-		_cb_http_client_thread_created.bind(callback))
-	pass
+		JSON.stringify(thread_data),
+		get_http_headers())
+
+
+func _cb_http_client_commands_response(
+	result: int,
+	response_code: int,
+	_headers: PackedStringArray,
+	body: PackedByteArray):
+	
+	print_debug("[DiscordBot] Got commands list !")
+	print_debug("Result : %d - Response code : %s\nResult %s" % [result, response_code, body.get_string_from_utf8()] )
+
+func get_http_headers() -> Dictionary[String,String]:
+	return {
+		"Authorization": ("Bot %s" % configuration.token),
+		"Content-Type": "application/json"
+	}

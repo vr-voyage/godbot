@@ -1,17 +1,8 @@
 class_name DiscordBotGatewayInteractionHandlers extends DiscordBotDispatchHandler
 
-enum InteractionType
-{
-	PING = 1,
-	APPLICATION_COMMAND = 2,
-	MESSAGE_COMPONENT = 3,
-	APPLICATION_COMMAND_AUTOCOMPLETE = 4,
-	MODAL_SUBMIT = 5
-}
+var handlers:Dictionary[DiscordTypes.Interaction,DiscordBotInteractionHandler] = {}
 
-var handlers:Dictionary[InteractionType,DiscordBotInteractionHandler] = {}
-
-func register_handler(interactionType:InteractionType, handler:DiscordBotInteractionHandler) -> void:
+func register_handler(interactionType:DiscordTypes.Interaction, handler:DiscordBotInteractionHandler) -> void:
 	handlers[interactionType] = handler
 
 func get_dispatch_type() -> String:

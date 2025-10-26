@@ -1,4 +1,4 @@
-class_name OllamaModelPullRequest extends Resource
+class_name OllamaModelPullRequest extends OllamaRequest
 
 @export var model:String
 @export var stream:bool = true
