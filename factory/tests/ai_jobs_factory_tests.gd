@@ -19,12 +19,12 @@ func ai_job_done(result:FactoryJobResponse):
 
 func _ready():
 	factory.request(
-		AiChatRequest.new("FEZFJIOPB", "gemma3:1b", "How to use Ryu in Tekken Tournament ?"),
+		AiChatRequest.new("FEZFJIOPB", "gemma3:1b", [AiChatPrompt.new("How to use Ryu in Tekken Tournament ?")]),
 		ai_job_done)
 	factory.request(
-		AiChatRequest.new("FFBJIOP238", "gemma3:1b", "How to use Sonic in World of Warcraft ?"),
+		AiChatRequest.new("FFBJIOP238", "gemma3:1b", [AiChatPrompt.new("How to use Sonic in World of Warcraft ?")]),
 		ai_job_done)
 	factory.request(
-		AiChatRequest.new("578457230", "gemma3:1b", "Create a Street Fighter game in C# and Unity"),
+		AiChatRequest.new("578457230", "gemma3:1b", [AiChatPrompt.new("Create a Street Fighter game in C# and Unity")]),
 		ai_job_done)
 	

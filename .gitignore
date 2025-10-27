@@ -2,3 +2,5 @@
 .godot/
 /android/
 discord/resources/bot_configuration.tres
+.env
+export_presets.cfg

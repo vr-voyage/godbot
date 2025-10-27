@@ -3,9 +3,18 @@ extends Control
 @export var ollama_worker:OllamaWorker
 
 var chat_jobs:Array[AiChatRequest] = [
-	AiChatRequest.new("A15697845169", "gemma3:1b", "In Unity, How to spawn a fish in C# ?"),
-	AiChatRequest.new("F16587854689", "gemma3:1b", "I'd like to make a MMORPG like Phantasy Star Online using Unity. What videos would you recommend ?"),
-	AiChatRequest.new("B18978949789", "gemma3:1b", "Can a hamster use Thunder Shock and Wild Charge ?"),
+	AiChatRequest.new(
+		"A15697845169",
+		"gemma3:1b",
+		[AiChatPrompt.new("In Unity, How to spawn a fish in C# ?")]),
+	AiChatRequest.new(
+		"F16587854689",
+		"gemma3:1b",
+		[AiChatPrompt.new("I'd like to make a MMORPG like Phantasy Star Online using Unity. What videos would you recommend ?")]),
+	AiChatRequest.new(
+		"B18978949789",
+		"gemma3:1b",
+		[AiChatPrompt.new("Can a hamster use Thunder Shock and Wild Charge ?")])
 ]
 
 func job_done(job_result:FactoryJobResponse):

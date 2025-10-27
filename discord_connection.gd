@@ -99,10 +99,14 @@ func send_data(data):
 	websocket.put_packet(json_data.to_utf8_buffer())
 	on_data_sent.emit(json_data)
 
+func _enter_tree():
+	configuration = DiscordConfigurationParser.parse_configuration_from_environment()
+
 func _ready():
 	print_debug("Bot starting")
 	if configuration == null:
 		printerr("BOT NOT CONFIGURED !")
+		get_tree().quit(1)
 		return
 
 	websocket.inbound_buffer_size = 512*1024
