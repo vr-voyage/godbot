@@ -30,6 +30,7 @@ func add_known_models_to_modal(modal_content:Dictionary):
 		options_array.append(ai_model_description_to_option(known_models_list[model_name]))
 
 func respond_to_command(_command_data:Dictionary, _interaction_data:Dictionary) -> Dictionary:
+	# TODO Prepare another response if we don't have model available
 	var modal_content:Dictionary = {
 		"type": DiscordTypes.InteractionCallback.MODAL,
 		"data": {

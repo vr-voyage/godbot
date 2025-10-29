@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="DiscordManagement"
+config/name="Godbot"
+config/version="20251029"
 run/main_scene="uid://crmpf7ig8wo3y"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
