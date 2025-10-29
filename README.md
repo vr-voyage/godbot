@@ -4,6 +4,11 @@
 
 This is a Godot powered Discord Bot that allows you to chat with local LLM, handled by different agents.
 
+![Prompt Modal](./screenshots/alpha-discord-prompt.png)
+![Thread](./screenshots/alpha-discord-prompt-thread.png)
+![Result](./screenshots/alpha-discord-prompt-result.png)
+![Chat](./screenshots/alpha-discord-prompt-chat.png)
+
 At the moment, though, this just forwards chat requests to a Ollama agent.
 
 Supported so far :
