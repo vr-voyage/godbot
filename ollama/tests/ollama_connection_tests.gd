@@ -21,7 +21,7 @@ func _ready():
 	var chat_request := OllamaChatCompletionRequest.new()
 	chat_request.model = "gemma3:1b"
 	chat_request.stream = false
-	chat_request.add_prompt("In Unity, how to spawn a GameObject in C# ?")
+	chat_request.add_prompt(AiChatPrompt.new("In Unity, how to spawn a GameObject in C# ?"))
 	
 	ollama_connection.send_chat_request(chat_request)
 	

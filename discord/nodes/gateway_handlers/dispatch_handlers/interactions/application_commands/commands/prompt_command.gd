@@ -38,7 +38,7 @@ func respond_to_command(_command_data:Dictionary, _interaction_data:Dictionary) 
 			"components": [
 				{
 					"type": DiscordTypes.Component.LABEL,
-					"label": "Select the model",
+					"label": "Select the model you wish to use",
 					"required": true,
 					"component": {
 						"type": DiscordTypes.Component.STRING_SELECT,
@@ -50,7 +50,7 @@ func respond_to_command(_command_data:Dictionary, _interaction_data:Dictionary) 
 				{
 					"type": DiscordTypes.Component.LABEL,
 					"label": "Prompt",
-					"description": "Provider a full prompt for the AI to respond to.",
+					"description": "Provide a full prompt for the AI to respond to :",
 					"component": {
 						"type": DiscordTypes.Component.TEXT_INPUT,
 						"custom_id": "prompt",

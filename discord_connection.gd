@@ -58,7 +58,7 @@ func send_request(
 	var headers:PackedStringArray = ["Authorization: Bot %s" % configuration.token]
 	if method != HTTPClient.Method.METHOD_GET:
 		headers.append("Content-Type: application/json")
-	print_to_curl(method, url, headers)
+#	print_to_curl(method, url, headers)
 	http_request.request(url, headers, method, data)
 
 

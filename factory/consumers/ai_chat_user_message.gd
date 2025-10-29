@@ -15,6 +15,10 @@ func handle_message(discord_bot:DiscordBot, message:Dictionary):
 			"The bot is currently answering. No messages accepted at the moment")
 		return
 
+	discord_bot.send_message_in(
+		thread_id,
+		"System : Requesting...")
+
 	discord_customer_agent.dispatch_chat_request(
 		user_id,
 		thread_id,
