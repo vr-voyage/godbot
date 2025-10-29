@@ -1,8 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://crmpf7ig8wo3y"]
+[gd_scene load_steps=20 format=3 uid="uid://crmpf7ig8wo3y"]
 
 [ext_resource type="Script" uid="uid://b75ahw8on0gqj" path="res://discord_connection.gd" id="1_govvg"]
 [ext_resource type="Script" uid="uid://j57mymm8qden" path="res://test_bot_scene.gd" id="1_vjwj5"]
-[ext_resource type="Resource" uid="uid://j004w2jwg5fd" path="res://discord/resources/bot_configuration.tres" id="3_ufs3i"]
 [ext_resource type="Script" uid="uid://d3oycsg4flyrf" path="res://discord/nodes/gateway_handlers.gd" id="4_djsm0"]
 [ext_resource type="Script" uid="uid://bel1pv3pbv17e" path="res://discord/nodes/gateway_handlers/gateway_dispatch_handlers.gd" id="5_djsm0"]
 [ext_resource type="Script" uid="uid://iiu8jt7n0m5d" path="res://discord/nodes/gateway_handlers/dispatch_handlers/interactions/interaction_handlers.gd" id="6_snh4b"]
@@ -62,7 +61,6 @@ size_flags_vertical = 3
 [node name="DiscordBot" type="Node" parent="." node_paths=PackedStringArray("gateway_handlers", "http_requests_queue")]
 process_mode = 3
 script = ExtResource("1_govvg")
-configuration = ExtResource("3_ufs3i")
 gateway_handlers = NodePath("GatewayHandlers")
 http_requests_queue = NodePath("../HttpRequestsQueue")
 

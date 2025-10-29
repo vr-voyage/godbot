@@ -6,3 +6,6 @@ class_name AiModelDescription extends Resource
 @export var presentation_name:String
 ## The description of that model.
 @export var description:String
+
+func _to_string():
+	return "Internal : %s, Presentation : %s, Description : %s" % [internal_name, presentation_name, description]

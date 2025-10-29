@@ -8,8 +8,9 @@ func get_command_name() -> String:
 	return "prompt"
 
 func handle_received_models_list(models_list:Array[AiModelDescription]):
-	print_debug("[BUG] Handle received models list")
+	print_debug("[DiscordBotPromptCommand] Handle received models list")
 	for model in models_list:
+		print_debug(model._to_string())
 		known_models_list[model.internal_name] = model
 
 func _ready():

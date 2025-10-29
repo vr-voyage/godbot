@@ -7,11 +7,8 @@ class HttpRequestInfo:
 	var data:String
 	var callback_signal:Signal
 
-	func _init(connection:OllamaConnection, endpoint:OllamaEndpoints.OllamaEndpoint):
-		url = "http://%s:%s%s" % [
-			connection.ollama_server_address,
-			connection.ollama_server_port,
-			endpoint.path]
+	func _init(conf:OllamaConnectionConfiguration, endpoint:OllamaEndpoints.OllamaEndpoint):
+		url = "http://%s:%s%s" % [conf.ip, conf.port, endpoint.path]
 		method = endpoint.method
 		additional_headers["Content-Type"] = "application/json"
 
@@ -26,19 +23,31 @@ signal chat_request_response(status, content)
 signal pull_model_response(status, content)
 signal list_models_response(status, content)
 
-@export var ollama_server_port := 11434
-@export var ollama_server_address := "127.0.0.1"
+var configuration:OllamaConnectionConfiguration
+
+#@export var ollama_server_port := 11434
+#@export var ollama_server_address := "127.0.0.1"
 
 var current_request:HTTPRequest = null
 var queued_requests:Array[HttpRequestInfo]
+
+func _init():
+	configuration = OllamaConfigurationParser.parse_configuration_from_environment()
+
+func _enter_tree():
+	if configuration == null:
+		get_tree().quit(2)
 
 func send_request(
 	ollama_request:OllamaRequest,
 	endpoint_name:String,
 	callback_signal:Signal) -> void:
+	if configuration == null:
+		return
+
 	print_debug("[OllamaConnection] Sending request %s !" % ClassHelpers.get_class_of(ollama_request))
 	var http_request := HttpRequestInfo.new(
-		self,
+		configuration,
 		OllamaEndpoints.endpoints[endpoint_name])
 	var data_as_dict := ollama_request.to_dictionary()
 	http_request.data = JSON.stringify(data_as_dict)

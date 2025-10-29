@@ -2,7 +2,7 @@ extends Node
 
 class_name DiscordBot
 
-@export var configuration:DiscordBotConfiguration
+var configuration:DiscordBotConfiguration
 
 signal on_data_received(received_data:String)
 signal on_data_sent(sent_data:String)
@@ -99,8 +99,9 @@ func send_data(data):
 	websocket.put_packet(json_data.to_utf8_buffer())
 	on_data_sent.emit(json_data)
 
-func _enter_tree():
+func _init():
 	configuration = DiscordConfigurationParser.parse_configuration_from_environment()
+	print_debug("%s %s" % [configuration.application_id, configuration.token])
 
 func _ready():
 	print_debug("Bot starting")
