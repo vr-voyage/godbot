@@ -101,7 +101,6 @@ func send_data(data):
 
 func _init():
 	configuration = DiscordConfigurationParser.parse_configuration_from_environment()
-	print_debug("%s %s" % [configuration.application_id, configuration.token])
 
 func _ready():
 	print_debug("Bot starting")
@@ -297,7 +296,6 @@ func _cb_http_client_message_created(
 	mark_current_message_sent_and_send_next_message()
 
 func _send_message(queued_message:QueuedMessage):
-	print_debug("SENDING MESSAGE : %s" % queued_message.content)
 	send_request(
 		HTTPClient.METHOD_POST,
 		"/api/v10/channels/%s/messages" % queued_message.channel_id,

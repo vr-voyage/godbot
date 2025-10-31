@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://6a3dd6xgi648"]
 
-[ext_resource type="Script" uid="uid://bq1ay5en2gsdm" path="res://ollama/tests/ollama_connection_tests.gd" id="1_162v3"]
-[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="2_7tw28"]
+[ext_resource type="Script" uid="uid://bq1ay5en2gsdm" path="res://workers/ollama/tests/ollama_connection_tests.gd" id="1_162v3"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://workers/ollama/ollama_connection.gd" id="2_7tw28"]
 
 [node name="OllamaConnectionTests" type="Control" node_paths=PackedStringArray("ollama_connection")]
 layout_mode = 3

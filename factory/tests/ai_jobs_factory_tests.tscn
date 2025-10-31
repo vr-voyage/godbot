@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://skiopa3ipnmu" path="res://factory/tests/ai_jobs_factory_tests.gd" id="1_rxbp4"]
 [ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="2_dn8du"]
-[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="3_8sa56"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://workers/ollama/ollama_connection.gd" id="3_8sa56"]
 [ext_resource type="Script" uid="uid://yn45gdivmxoj" path="res://factory/ai_jobs_factory.gd" id="4_u2101"]
 
 [node name="AiJobsFactoryTests" type="Control" node_paths=PackedStringArray("factory")]

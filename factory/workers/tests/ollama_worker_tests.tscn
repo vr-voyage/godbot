@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cccy7wlkxjt8y" path="res://factory/workers/tests/ollama_worker_tests.gd" id="1_7b6qa"]
 [ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="2_8w7li"]
-[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="3_5jb8m"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://workers/ollama/ollama_connection.gd" id="3_5jb8m"]
 
 [node name="OllamaWorkerTests" type="Control" node_paths=PackedStringArray("ollama_worker")]
 layout_mode = 3

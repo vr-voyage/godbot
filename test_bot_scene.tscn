@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://crmpf7ig8wo3y"]
+[gd_scene load_steps=19 format=3 uid="uid://crmpf7ig8wo3y"]
 
 [ext_resource type="Script" uid="uid://b75ahw8on0gqj" path="res://discord_connection.gd" id="1_govvg"]
 [ext_resource type="Script" uid="uid://j57mymm8qden" path="res://test_bot_scene.gd" id="1_vjwj5"]
@@ -16,9 +16,8 @@
 [ext_resource type="Script" uid="uid://bpasfbcpi71ns" path="res://discord/nodes/gateway_handlers/gateway_hearbeat_ack_handler.gd" id="13_wia81"]
 [ext_resource type="Script" uid="uid://cikf33jp468rv" path="res://factory/consumers/discord_customer_agent.gd" id="14_wy6fe"]
 [ext_resource type="Script" uid="uid://yn45gdivmxoj" path="res://factory/ai_jobs_factory.gd" id="15_7u6y5"]
-[ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="16_15hng"]
-[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="17_julb8"]
 [ext_resource type="Script" uid="uid://dcga0m7no5owh" path="res://helpers/http_requests_queue.gd" id="18_7u6y5"]
+[ext_resource type="PackedScene" uid="uid://bcxaucd2p6fr2" path="res://workers/vllm/vllm_worker.tscn" id="19_15hng"]
 
 [node name="Node" type="PanelContainer" node_paths=PackedStringArray("log_display", "objects_display")]
 process_mode = 3
@@ -62,7 +61,7 @@ size_flags_vertical = 3
 process_mode = 3
 script = ExtResource("1_govvg")
 gateway_handlers = NodePath("GatewayHandlers")
-http_requests_queue = NodePath("../HttpRequestsQueue")
+http_requests_queue = NodePath("DiscordHttpQueue")
 
 [node name="GatewayHandlers" type="Node" parent="DiscordBot"]
 process_mode = 4
@@ -77,12 +76,12 @@ script = ExtResource("6_snh4b")
 [node name="ApplicationCommands" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers" node_paths=PackedStringArray("discord_bot", "http_request_queue")]
 script = ExtResource("7_8gakc")
 discord_bot = NodePath("../../../..")
-http_request_queue = NodePath("../../../../../HttpRequestsQueue")
+http_request_queue = NodePath("../../../../DiscordHttpQueue")
 cleanup_commands_on_start = true
 
 [node name="Prompt" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers/ApplicationCommands" node_paths=PackedStringArray("discord_customer_agent")]
 script = ExtResource("8_f0608")
-discord_customer_agent = NodePath("../../../../../../DiscordCustomerAgent")
+discord_customer_agent = NodePath("../../../../../DiscordCustomerAgent")
 
 [node name="Node" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers/ApplicationCommands"]
 
@@ -91,7 +90,7 @@ script = ExtResource("9_0wkto")
 
 [node name="PromptModal" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/InteractionCreateHandlers/ModalSubmit" node_paths=PackedStringArray("discord_customer_agent", "discord_bot")]
 script = ExtResource("10_asl8e")
-discord_customer_agent = NodePath("../../../../../../DiscordCustomerAgent")
+discord_customer_agent = NodePath("../../../../../DiscordCustomerAgent")
 discord_bot = NodePath("../../../../..")
 
 [node name="DiscordMessageHandlers" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch"]
@@ -100,7 +99,7 @@ metadata/_custom_type_script = "uid://d07fvosep4aq"
 
 [node name="UserMessageInAiChatThread" type="Node" parent="DiscordBot/GatewayHandlers/Dispatch/DiscordMessageHandlers" node_paths=PackedStringArray("discord_customer_agent")]
 script = ExtResource("12_julb8")
-discord_customer_agent = NodePath("../../../../../DiscordCustomerAgent")
+discord_customer_agent = NodePath("../../../../DiscordCustomerAgent")
 
 [node name="Heartbeat" type="Node" parent="DiscordBot/GatewayHandlers"]
 script = ExtResource("11_0wkto")
@@ -111,11 +110,16 @@ script = ExtResource("12_26o8a")
 [node name="HeartbeatAck" type="Node" parent="DiscordBot/GatewayHandlers"]
 script = ExtResource("13_wia81")
 
-[node name="DiscordCustomerAgent" type="Node" parent="." node_paths=PackedStringArray("discord_bot", "factory")]
+[node name="DiscordHttpQueue" type="Node" parent="DiscordBot"]
+script = ExtResource("18_7u6y5")
+prefix = "https://discord.com"
+metadata/_custom_type_script = "uid://dcga0m7no5owh"
+
+[node name="DiscordCustomerAgent" type="Node" parent="DiscordBot" node_paths=PackedStringArray("discord_bot", "factory")]
 process_mode = 3
 script = ExtResource("14_wy6fe")
-discord_bot = NodePath("../DiscordBot")
-factory = NodePath("../AiJobFactory")
+discord_bot = NodePath("..")
+factory = NodePath("../../AiJobFactory")
 metadata/_custom_type_script = "uid://cikf33jp468rv"
 
 [node name="AiJobFactory" type="Node" parent="." groups=["Factories"]]
@@ -123,20 +127,7 @@ process_mode = 3
 script = ExtResource("15_7u6y5")
 metadata/_custom_type_script = "uid://yn45gdivmxoj"
 
-[node name="OllamaWorker" type="Node" parent="." node_paths=PackedStringArray("ollama_connection")]
-process_mode = 3
-script = ExtResource("16_15hng")
-ollama_connection = NodePath("../OllamaConnection")
-metadata/_custom_type_script = "uid://c1cnremojxonq"
-
-[node name="OllamaConnection" type="Node" parent="."]
-process_mode = 3
-script = ExtResource("17_julb8")
-metadata/_custom_type_script = "uid://dppfooqqohjee"
-
-[node name="HttpRequestsQueue" type="Node" parent="."]
-script = ExtResource("18_7u6y5")
-metadata/_custom_type_script = "uid://dcga0m7no5owh"
+[node name="VllmWorker" parent="." instance=ExtResource("19_15hng")]
 
 [connection signal="on_object_received" from="DiscordBot" to="." method="_on_node_on_object_received"]
 [connection signal="on_send_object" from="DiscordBot" to="." method="_on_node_on_send_object"]

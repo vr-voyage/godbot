@@ -1,13 +1,15 @@
 class_name HttpRequestsQueue extends Node
 
+@export var prefix:String = ""
+
 class PlannedRequest:
 	var method:HTTPClient.Method
 	var url:String
-	var headers:Dictionary
+	var headers:Dictionary[String,String] = {}
 	var data:String
 	var callback:Callable
 
-	func _init(new_method:HTTPClient.Method, new_url:String, new_headers:Dictionary = {}, new_data:String = ""):
+	func _init(new_method:HTTPClient.Method, new_url:String, new_headers:Dictionary[String,String] = {}, new_data:String = ""):
 		method = new_method
 		url = new_url
 		headers = new_headers
@@ -88,10 +90,10 @@ func plan_request(
 	method:HTTPClient.Method,
 	url:String,
 	content:String = "",
-	headers:Dictionary = {}):
+	headers:Dictionary[String,String] = {}):
 	var planned_request = PlannedRequest.new(
 		method,
-		"https://discord.com" + url,
+		prefix + url,
 		headers,
 		content)
 	planned_request.callback = callback

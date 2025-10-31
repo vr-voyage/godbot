@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bcxaucd2p6fr2"]
+
+[ext_resource type="Script" uid="uid://c4un6w50dxdfk" path="res://workers/vllm/vllm_worker.gd" id="1_n1iaa"]
+[ext_resource type="Script" uid="uid://ci1sr310wg5ls" path="res://workers/vllm/vllm_connection.gd" id="2_dq4oh"]
+[ext_resource type="Script" uid="uid://dcga0m7no5owh" path="res://helpers/http_requests_queue.gd" id="3_yhdda"]
+
+[node name="VllmWorker" type="Node" node_paths=PackedStringArray("vllm_connection")]
+script = ExtResource("1_n1iaa")
+vllm_connection = NodePath("VllmConnection")
+metadata/_custom_type_script = "uid://c4un6w50dxdfk"
+
+[node name="VllmConnection" type="Node" parent="." node_paths=PackedStringArray("http_queue")]
+script = ExtResource("2_dq4oh")
+http_queue = NodePath("VllmHttpQueue")
+metadata/_custom_type_script = "uid://ci1sr310wg5ls"
+
+[node name="VllmHttpQueue" type="Node" parent="VllmConnection"]
+script = ExtResource("3_yhdda")
+metadata/_custom_type_script = "uid://dcga0m7no5owh"

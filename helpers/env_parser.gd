@@ -35,7 +35,6 @@ static func parse_env_content(env_file_content:String) -> Dictionary:
 		var cleaned_line:String = line.strip_edges()
 		var key_values:PackedStringArray = cleaned_line.split("=",true,2)
 		if len(key_values) < 2:
-			print_debug("[EnvParser] Skipping %s" % line)
 			continue
 		var key:String = key_values[0].strip_edges()
 		var value:String = key_values[1].strip_edges()

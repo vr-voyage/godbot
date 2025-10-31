@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://snlox5ygfrnf"]
+
+[ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="1_veynk"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://workers/ollama/ollama_connection.gd" id="2_3wo8b"]
+
+[node name="OllamaWorker" type="Node" node_paths=PackedStringArray("ollama_connection")]
+process_mode = 3
+script = ExtResource("1_veynk")
+ollama_connection = NodePath("OllamaConnection")
+metadata/_custom_type_script = "uid://c1cnremojxonq"
+
+[node name="OllamaConnection" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("2_3wo8b")
+metadata/_custom_type_script = "uid://dppfooqqohjee"

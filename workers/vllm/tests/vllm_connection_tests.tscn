@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://doyysgb37cywi"]
+
+[ext_resource type="Script" uid="uid://vmm2sxy4pyps" path="res://workers/vllm/tests/vllm_connection_tests.gd" id="1_cbajv"]
+[ext_resource type="Script" uid="uid://ci1sr310wg5ls" path="res://workers/vllm/vllm_connection.gd" id="1_jmdtw"]
+[ext_resource type="Script" uid="uid://dcga0m7no5owh" path="res://helpers/http_requests_queue.gd" id="4_vsgka"]
+
+[node name="VllmConnectionTests" type="Control" node_paths=PackedStringArray("vllm_connection")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cbajv")
+vllm_connection = NodePath("VllmConnection")
+
+[node name="VllmConnection" type="Node" parent="." node_paths=PackedStringArray("http_queue")]
+script = ExtResource("1_jmdtw")
+http_queue = NodePath("../HttpRequestsQueue")
+metadata/_custom_type_script = "uid://ci1sr310wg5ls"
+
+[node name="HttpRequestsQueue" type="Node" parent="."]
+script = ExtResource("4_vsgka")
+metadata/_custom_type_script = "uid://dcga0m7no5owh"

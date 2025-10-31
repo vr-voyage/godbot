@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cikf33jp468rv" path="res://factory/consumers/discord_customer_agent.gd" id="3_5q34v"]
 [ext_resource type="Script" uid="uid://yn45gdivmxoj" path="res://factory/ai_jobs_factory.gd" id="4_f4alo"]
 [ext_resource type="Script" uid="uid://c1cnremojxonq" path="res://factory/workers/ollama_worker.gd" id="5_dunfi"]
-[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://ollama/ollama_connection.gd" id="6_6inj2"]
+[ext_resource type="Script" uid="uid://dppfooqqohjee" path="res://workers/ollama/ollama_connection.gd" id="6_6inj2"]
 
 [node name="DiscordCustomerAgentTests" type="Control" node_paths=PackedStringArray("discord_customer_agent", "debug_output")]
 layout_mode = 3
